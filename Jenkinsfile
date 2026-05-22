@@ -42,13 +42,13 @@ pipeline {
         }
         stage('Archivage') {
             steps {
-                archiveArtifacts artifacts:    'target/*.jar',
+                archiveArtifacts artifacts: 'target/*.jar',
                                  fingerprint: true
             }
         }
     }
     post {
-        success { echo 'Pipeline reussi avec succes !'         }
+        success { echo 'Pipeline reussi avec succes !' }
         failure { echo 'Pipeline echoue -- consultez les logs.' }
     }
 }

@@ -1,64 +1,83 @@
-pipeline {
-    agent any
+pipeline { 
+    agent any 
     
-    tools {
-        maven 'Maven-3.9'
+    tools { 
+        maven 'Maven-3.9' 
         jdk   'JDK-17'
     }
-    
+
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-                echo "Build #${env.BUILD_NUMBER} | Branche : ${env.BRANCH_NAME}"
+        // Stage 1 : Récupération du code
+        stage('Checkout') { 
+            steps { 
+                checkout scm 
+                echo "Build #${env.BUILD_NUMBER}" 
+                echo "Branche : ${env.BRANCH_NAME}"
             }
         }
-        
-        stage('Build') {
-            steps {
+
+        // Stage 2 : Compilation de l'application
+        stage('Build') { 
+            steps { 
                 bat 'mvn clean package -DskipTests'
             }
         }
-        
-        stage('Tests Unitaires') {
-            steps {
+
+        // Stage 3 : Le nouveau stage demandé au point 6.1 (Analyse Checkstyle)
+        stage('Lint') {
+            steps { 
+                bat 'mvn checkstyle:check' 
+            }
+        }
+        stage('Lint') {
+            steps { 
+                bat 'mvn checkstyle:check' 
+            }
+        }
+
+        // Stage 4 : Tests Unitaires et génération des rapports de tests
+        stage('Tests Unitaires') { 
+            steps { 
                 bat 'mvn test'
             }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
+            post { 
+                always { 
+                    junit 'target/surefire-reports/*.xml' 
                 }
             }
         }
-        
-        stage('Couverture') {
-            steps {
+
+        // Stage 5 : Analyse de la couverture de code avec JaCoCo
+        stage('Couverture') { 
+            steps { 
                 bat 'mvn verify'
             }
-            post {
-                always {
-                    jacoco(
-                        execPattern:   'target/*.exec',
-                        classPattern:  'target/classes',
+            post { 
+                always { 
+                    jacoco( 
+                        execPattern: 'target/*.exec',
+                        classPattern: 'target/classes', 
                         sourcePattern: 'src/main/java'
                     )
                 }
             }
         }
-        
-        stage('Archivage') {
-            steps {
+
+        // Stage 6 : Archivage du fichier JAR généré
+        stage('Archivage') { 
+            steps { 
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
-    } // <-- Cette accolade manquait pour fermer proprement la section "stages"
+    }
 
-    post {
+    // Actions globales de fin de Pipeline
+    post { 
         success { 
             echo 'Pipeline reussi avec succes !' 
-        }
+        } 
         failure { 
-            echo 'Pipeline echoue -- consultez les logs.' 
+            echo 'Pipeline echoue -- verifiez les logs.' 
         }
     }
 }

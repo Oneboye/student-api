@@ -1,9 +1,11 @@
 pipeline {
     agent any
+    
     tools {
         maven 'Maven-3.9'
         jdk   'JDK-17'
     }
+    
     stages {
         stage('Checkout') {
             steps {
@@ -11,11 +13,13 @@ pipeline {
                 echo "Build #${env.BUILD_NUMBER} | Branche : ${env.BRANCH_NAME}"
             }
         }
+        
         stage('Build') {
             steps {
                 bat 'mvn clean package -DskipTests'
             }
         }
+        
         stage('Tests Unitaires') {
             steps {
                 bat 'mvn test'
@@ -26,6 +30,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Couverture') {
             steps {
                 bat 'mvn verify'
@@ -40,15 +45,20 @@ pipeline {
                 }
             }
         }
+        
         stage('Archivage') {
             steps {
-                archiveArtifacts artifacts: 'target/*.jar',
-                                 fingerprint: true
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
-    }
+    } // <-- Cette accolade manquait pour fermer proprement la section "stages"
+
     post {
-        success { echo 'Pipeline reussi avec succes !' }
-        failure { echo 'Pipeline echoue -- consultez les logs.' }
+        success { 
+            echo 'Pipeline reussi avec succes !' 
+        }
+        failure { 
+            echo 'Pipeline echoue -- consultez les logs.' 
+        }
     }
 }

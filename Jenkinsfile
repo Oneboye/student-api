@@ -15,7 +15,6 @@ pipeline {
                 echo "Branche : ${env.BRANCH_NAME}"
             }
         }
-
         // Stage 2 : Compilation de l'application
         stage('Build') { 
             steps { 
@@ -24,11 +23,6 @@ pipeline {
         }
 
         // Stage 3 : Le nouveau stage demandé au point 6.1 (Analyse Checkstyle)
-        stage('Lint') {
-            steps { 
-                bat 'mvn checkstyle:check' 
-            }
-        }
         stage('Lint') {
             steps { 
                 bat 'mvn checkstyle:check' 

@@ -37,7 +37,7 @@ class StudentControllerTest {
 
         mockMvc.perform(get("/api/students"))
                .andExpect(status().isOk())
-               .andExpect(jsonPath("$[0].prenom").value("Adama"));
+               .andExpect(jsonPath("$[0].prenom").value("Fatou"));
     }
 
     @Test

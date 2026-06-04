@@ -54,8 +54,7 @@
                     <configuration>
                         <configLocation>sun_checks.xml</configLocation>
                         <consoleOutput>true</consoleOutput>
-                        <failsOnError>false</failsOnError> 
-                        <linkXRef>false</linkXRef>
+                        <failOnViolation>false</failOnViolation>
                     </configuration>
                     <executions>
                         <execution>

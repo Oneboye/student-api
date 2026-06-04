@@ -41,8 +41,7 @@ class StudentServiceTest {
         when(repository.findById(1L)).thenReturn(Optional.of(s));
 
         Optional<Student> result = service.findById(1L);
-
-        assertTrue(result.isPresent());
+            assertTrue(result.isPresent());
         assertEquals("Awa", result.get().getPrenom());
     }
 
